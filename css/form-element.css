@@ -1,0 +1,27 @@
+.text-element{
+    position: relative;
+}
+
+.text-element::before, .text-element::after {
+    content: '';
+    width: 160px;
+    height: 2px;
+    background-color: var(--medium-gray);
+    display: inline-block;
+}
+
+.text-element::before {
+    position: absolute;
+    top: 50%;
+    left: -790%;
+}
+
+.text-element::after {
+    position: absolute;
+    top: 50%;
+    left: 150%;
+}
+
+
+
+  

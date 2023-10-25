@@ -1,0 +1,15 @@
+.login-container {
+    height: 620px;
+    width: 1300px;
+    display: flex;
+}
+
+.info-container {
+    height: 100%;
+    width: 50%;
+}
+
+.form-container {
+    height: 100%;
+    width: 50%;
+}
