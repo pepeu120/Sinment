@@ -1,6 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
+<?php
+session_start();
+
+include_once "src/controller/auth.php";
+
+if (isset($_SESSION['message'])) {
+    echo "<div class='message'>{$_SESSION['message']}</div>";
+    unset($_SESSION['message']);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    $user = Auth::login($email, $password);
+
+    if ($user) {
+        session_start();
+        $_SESSION['user'] = $user;
+        header("Location: src/view/home.php");
+        exit();
+    } else {
+        echo "Login falhou. Verifique suas credenciais.";
+    }
+}
+
+?>
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,8 +75,8 @@
                         <input type="password" class="form-input" placeholder="Senha">
                     </div>
 
-                    <button class="form-button">Entrar</button>
-                    <a href="recorverd-password.php" class="form-link">Esqueceu a senha?</a>
+                    <button href="/Sinment/src/view/home.php" class="form-button">Entrar</button>
+                    <a href="/Sinment/src/view/recorverd-password.php" class="form-link">Esqueceu a senha?</a>
                     <div class="form-element">
                         <div class="text-element">Ou</div>
                     </div>
@@ -60,9 +89,7 @@
             <div class="modal">
                 <button class="close-modal" id="close-modal">X</button>
                 <h1>Cadastre-se</h1>
-                <form action="src/userSave.php" method="post">
-
-
+                <form action="/Sinment/src/controller/userController.php" method="post">
                     <div class="form-input-container">
                         <input type="text" name="firstname" class="form-input" placeholder="Nome" required>
 
@@ -73,7 +100,7 @@
                         <input type="password" name="password" class="form-input" placeholder="Senha" required>
                     </div>
                     <p class="terms-text">Ao se cadastrar, você concorda com nossos <a href="#">Termos, Política de Privacidade</a> e <a href="#">Política de Cookies.</a></p>
-                    <button class="form-button">Cadastrar</button>
+                    <button class="form-button" name="submit">Cadastrar</button>
                 </form>
             </div>
         </div>

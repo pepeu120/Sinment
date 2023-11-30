@@ -1,6 +1,6 @@
 <?php
-include "connection.php";
-include "../model/user.php";
+require_once "../dao/connection.php";
+require_once "../model/user.php";
 
 class UserDAO
 {

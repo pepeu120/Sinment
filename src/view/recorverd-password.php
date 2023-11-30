@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +23,7 @@
     <link rel="stylesheet" href="./css-recoverd-password/container-buttons.css">
     <link rel="stylesheet" href="./css-recoverd-password/separator.css">
 </head>
+
 <body>
     <header>
         <div class="logo"><img src="images/logo.svg"></div>
@@ -40,11 +42,12 @@
                 <input type="email" placeholder="Email" class="form-input">
                 <hr>
                 <div class="container-buttons">
-                    <a class="btn-login-cancel" href="index.php">Cancelar</a>
+                    <a class="btn-login-cancel" href="/Sinment/index.php">Cancelar</a>
                     <button class="btn-login">Enviar</button>
                 </div>
             </div>
         </div>
     </main>
 </body>
+
 </html>
