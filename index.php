@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,8 +28,9 @@
     <link rel="stylesheet" href="./css/radio-button.css">
     <link rel="stylesheet" href="./css/terms-text.css">
     <link rel="stylesheet" href="./css/close-modal.css">
-    <title>Sinment-login</title> 
+    <title>Sinment-login</title>
 </head>
+
 <body>
     <main>
         <div class="login-container">
@@ -43,9 +45,9 @@
 
                         <input type="password" class="form-input" placeholder="Senha">
                     </div>
-                    
+
                     <button class="form-button">Entrar</button>
-                    <a href="recorverd-password.html" class="form-link" >Esqueceu a senha?</a>
+                    <a href="recorverd-password.php" class="form-link">Esqueceu a senha?</a>
                     <div class="form-element">
                         <div class="text-element">Ou</div>
                     </div>
@@ -58,17 +60,21 @@
             <div class="modal">
                 <button class="close-modal" id="close-modal">X</button>
                 <h1>Cadastre-se</h1>
-                <div class="form-input-container">
-                    <input type="text" class="form-input" placeholder="Nome" required>
+                <form action="src/userSave.php" method="post">
 
-                    <input type="text" class="form-input" placeholder="Sobrenome" required>
 
-                    <input type="email" class="form-input" placeholder="Email" required>
+                    <div class="form-input-container">
+                        <input type="text" name="firstname" class="form-input" placeholder="Nome" required>
 
-                    <input type="password" class="form-input" placeholder="Senha" required>
-                </div>
-                <p class="terms-text">Ao se cadastrar, você concorda com nossos <a href="#">Termos, Política de Privacidade</a> e <a href="#">Política de Cookies.</a></p>
-                <button class="form-button">Cadastrar</button>
+                        <input type="text" name="lastname" class="form-input" placeholder="Sobrenome" required>
+
+                        <input type="email" name="email" class="form-input" placeholder="Email" required>
+
+                        <input type="password" name="password" class="form-input" placeholder="Senha" required>
+                    </div>
+                    <p class="terms-text">Ao se cadastrar, você concorda com nossos <a href="#">Termos, Política de Privacidade</a> e <a href="#">Política de Cookies.</a></p>
+                    <button class="form-button">Cadastrar</button>
+                </form>
             </div>
         </div>
 
@@ -76,6 +82,7 @@
     </main>
 
     <div></div>
-    
+
 </body>
+
 </html>

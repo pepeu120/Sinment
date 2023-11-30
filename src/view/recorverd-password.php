@@ -40,7 +40,7 @@
                 <input type="email" placeholder="Email" class="form-input">
                 <hr>
                 <div class="container-buttons">
-                    <a class="btn-login-cancel" href="index.html">Cancelar</a>
+                    <a class="btn-login-cancel" href="index.php">Cancelar</a>
                     <button class="btn-login">Enviar</button>
                 </div>
             </div>
