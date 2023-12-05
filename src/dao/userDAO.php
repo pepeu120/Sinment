@@ -1,6 +1,6 @@
 <?php
-require_once "../dao/connection.php";
-require_once "../model/user.php";
+require_once __DIR__ . "/../dao/connection.php";
+require_once __DIR__ . "/../model/user.php";
 
 class UserDAO
 {
@@ -27,6 +27,7 @@ class UserDAO
             $stmt->execute();
 
             echo "Usúario " . $user->getFirstname() . " inserido com sucesso";
+            return true;
         } catch (PDOException $ex) {
             $ex->getMessage();
             throw new RuntimeException("Erro ao inserir informação no banco de dados");
@@ -119,4 +120,30 @@ class UserDAO
 
         return $users;
     }
+
+    public function authenticate($email, $password)
+    {
+        $conn = Connection::getConnection();
+        $stmt = $conn->prepare("SELECT * FROM User WHERE email = ? AND password = ?");
+        $stmt->bindParam(1, $email);
+        $stmt->bindParam(2, $password);
+        $stmt->execute();
+
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user = new User();
+            $user->setId($row['id']);
+            $user->setFirstname($row['firstname']);
+            $user->setLastname($row['lastname']);
+            $user->setEmail($row['email']);
+            $user->setPassword($row['password']);
+
+            Connection::closeConnection($conn);
+
+            return $user;
+        }
+
+        Connection::closeConnection($conn);
+        return null;
+    }
+
 }

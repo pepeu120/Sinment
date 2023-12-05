@@ -4,7 +4,7 @@
 <?php
 session_start();
 
-include_once "src/controller/auth.php";
+include_once __DIR__ . "/src/controller/auth.php";
 
 if (isset($_SESSION['message'])) {
     echo "<div class='message'>{$_SESSION['message']}</div>";
@@ -69,13 +69,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="form-container">
                 <div class="box-form">
-                    <div class="form-input-container">
-                        <input type="email" class="form-input" placeholder="Email">
-
-                        <input type="password" class="form-input" placeholder="Senha">
-                    </div>
-
-                    <button href="/Sinment/src/view/home.php" class="form-button">Entrar</button>
+                    <form action="/Sinment/src/controller/userController.php" method="post">
+                        <div class="form-input-container">
+                            <input type="email" name="email" class="form-input" placeholder="Email" required>
+                            <input type="password" name="password" class="form-input" placeholder="Senha" required>
+                        </div>
+                        <button class="form-button" name="login">Entrar</button>
+                    </form>
                     <a href="/Sinment/src/view/recorverd-password.php" class="form-link">Esqueceu a senha?</a>
                     <div class="form-element">
                         <div class="text-element">Ou</div>
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="password" name="password" class="form-input" placeholder="Senha" required>
                     </div>
                     <p class="terms-text">Ao se cadastrar, você concorda com nossos <a href="#">Termos, Política de Privacidade</a> e <a href="#">Política de Cookies.</a></p>
-                    <button class="form-button" name="submit">Cadastrar</button>
+                    <button class="form-button" name="signup">Cadastrar</button>
                 </form>
             </div>
         </div>

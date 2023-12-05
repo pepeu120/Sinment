@@ -1,20 +1,18 @@
 <?php
-require_once "src/dao/connection.php";
-require_once "src/model/user.php";
+require_once __DIR__ . "/../dao/connection.php";
+require_once __DIR__ . "/../model/user.php";
+require_once __DIR__ . "/../dao/userDAO.php";
+
 
 class Auth
 {
     public static function login($email, $password)
     {
-        $conn = Connection::getConnection();
-        $stmt = $conn->prepare("SELECT * FROM User WHERE email = :email AND password = :password");
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $password);
-        $stmt->execute();
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $userDAO = new UserDAO();
+        $user = $userDAO->authenticate($email, $password);
 
         if ($user) {
+            session_start();
             return $user;
         } else {
             return null;
@@ -23,13 +21,9 @@ class Auth
 
     public static function logout()
     {
-        session_start();
-
         session_unset();
-
         session_destroy();
-
-        header("Location: /index.php");
+        header("Location: Sinment/index.php");
         exit();
     }
 
