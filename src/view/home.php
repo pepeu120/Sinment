@@ -29,8 +29,8 @@ $user = $_SESSION['user'];
         <button type="submit" name="logout">Logout</button>
     </form>
 
-    <form action="../controller/userController.php" method="post">
-        <button type="submit" name="logout">Logout</button>
+    <form action="create_post.php" method="post">
+        <button type="submit" name="create_post">Create Post</button>
     </form>
 
     <form action="../controller/userController.php" method="post">

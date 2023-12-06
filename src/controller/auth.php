@@ -3,7 +3,6 @@ require_once __DIR__ . "/../dao/connection.php";
 require_once __DIR__ . "/../model/user.php";
 require_once __DIR__ . "/../dao/userDAO.php";
 
-
 class Auth
 {
     public static function login($email, $password)
@@ -23,7 +22,7 @@ class Auth
     {
         session_unset();
         session_destroy();
-        header("Location: Sinment/index.php");
+        header("Location: /Sinment/index.php");
         exit();
     }
 
