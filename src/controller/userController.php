@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             $_SESSION['message'] = "Usuário não autenticado. Verifique suas credenciais.";
+            header("Location: /Sinment/index.php");
         }
     } elseif (isset($_POST["signup"])) {
         $firstname = $sanitizer->sanitize($_POST["firstname"]);

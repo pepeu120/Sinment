@@ -2,7 +2,7 @@
 
 class InputSanitizer
 {
-    public function sanitize($input)
+    public static function sanitize($input)
     {
         return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
     }

@@ -3,6 +3,7 @@ require_once __DIR__ . "/../dao/postDAO.php";
 require_once __DIR__ . "/../model/post.php";
 require_once __DIR__ . "/../model/fileUpload.php";
 require_once __DIR__ . "/../model/session.php";
+require_once __DIR__ . "/../model/inputSanitizer.php";
 require_once "auth.php";
 
 $userDAO = new UserDAO(Connection::getConnection());
@@ -17,12 +18,11 @@ if (!$auth->isLoggedIn()) {
 }
 
 $user = $_SESSION['user'];
-$targetDirectory = "../../uploads/";
 
-$fileUpload = new FileUpload($targetDirectory);
+$fileUpload = new FileUpload("../../uploads/");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submitPost"])) {
-    $postCaption = htmlspecialchars($_POST["postCaption"]);
+    $postCaption = InputSanitizer::sanitize($_POST["postCaption"]);
 
     $targetFile = $fileUpload->upload($_FILES["postImage"]);
 
@@ -35,6 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submitPost"])) {
 
     if ($postDAO->insert($post)) {
         $_SESSION['message'] = "Post created successfully.";
+        header("Location: /Sinment/src/view/home.php");
+        exit();
     } else {
         $_SESSION['message'] = "Failed to create post.";
     }

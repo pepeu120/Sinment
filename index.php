@@ -10,6 +10,8 @@ $userDAO = new UserDAO(Connection::getConnection());
 $session = new Session();
 $auth = new Auth($userDAO, $session);
 
+$session->start();
+
 if (isset($_SESSION['message'])) {
     echo "<div class='message'>{$_SESSION['message']}</div>";
     unset($_SESSION['message']);

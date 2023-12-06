@@ -26,7 +26,7 @@ class UserDAO
         $stmt->bindParam(':password', $password);
 
         Connection::closeConnection($this->conn);
-        
+
         return $stmt->execute();
     }
 
@@ -89,6 +89,28 @@ class UserDAO
         return $users;
     }
 
+    public function getUserById($id): ?User
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM User WHERE id = ?");
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user = new User();
+            $user->setId($row['id']);
+            $user->setFirstname($row['firstname']);
+            $user->setLastname($row['lastname']);
+            $user->setEmail($row['email']);
+            $user->setPassword($row['password']);
+
+            Connection::closeConnection($this->conn);
+            return $user;
+        } else {
+            Connection::closeConnection($this->conn);
+            return null;
+        }
+    }
+
     public function authenticate($email, $password): ?User
     {
         $stmt = $this->conn->prepare("SELECT * FROM User WHERE email = ? AND password = ?");
@@ -105,8 +127,10 @@ class UserDAO
             $user->setPassword($row['password']);
 
             Connection::closeConnection($this->conn);
-
             return $user;
+        } else {
+            Connection::closeConnection($this->conn);
+            return null;
         }
     }
 }

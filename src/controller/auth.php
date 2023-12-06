@@ -22,8 +22,6 @@ class Auth
         if ($user) {
             $this->session->start();
             return $user;
-        } else {
-            throw new Exception("Authentication failed");
         }
     }
 

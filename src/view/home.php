@@ -45,9 +45,10 @@ $posts = $postDAO->getAllPosts();
 
     <?php foreach ($posts as $post) : ?>
         <div class="post">
+            <?php $postingUser = $userDAO->getUserById($post->getUserId()); ?>
             <h2><?php echo $post->getCaption(); ?></h2>
             <img src="<?php echo $post->getImagePath(); ?>" alt="Post image">
-            <p>Posted by <?php echo $user->getFirstname() . " " . $user->getLastname(); ?></p>
+            <p>Posted by <?php echo $postingUser->getFirstname() . " " . $postingUser->getLastname(); ?></p>
             <p>Posted on <?php echo $post->getPostingDate(); ?></p>
         </div>
     <?php endforeach; ?>
