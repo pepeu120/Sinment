@@ -49,6 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submitPost"])) {
 
         if ($postDAO->insert($post)) {
             echo "Post has been saved in the database.";
+            header("Location: /Sinment/src/view/home.php");
+            exit();
         } else {
             throw new Exception("There was an error saving the post in the database.");
         }

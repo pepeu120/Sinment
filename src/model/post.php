@@ -5,6 +5,7 @@ class Post
     private $userId;
     private $caption;
     private $imagePath;
+    private $postingDate;
 
     public function getId()
     {
@@ -46,4 +47,13 @@ class Post
         $this->imagePath = $imagePath;
     }
 
+    public function getPostingDate()
+    {
+        return $this->postingDate;
+    }
+
+    public function setPostingDate($postingDate)
+    {
+        $this->postingDate = $postingDate;
+    }
 }

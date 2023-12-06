@@ -85,4 +85,30 @@ class PostDAO
             Connection::closeConnection($conn);
         }
     }
+
+    public function getAllPosts(): array
+    {
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT * FROM Post ORDER BY id DESC");
+            $stmt->execute();
+
+            $posts = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $post = new Post();
+                $post->setId($row['id']);
+                $post->setUserId($row['user_id']);
+                $post->setCaption($row['caption']);
+                $post->setImagePath($row['image_path']);
+                $post->setPostingDate($row['posting_date']);
+                $posts[] = $post;
+            }
+
+            return $posts;
+        } catch (PDOException $ex) {
+            throw new Exception($ex->getMessage());
+        } finally {
+            Connection::closeConnection($conn);
+        }
+    }
 }
