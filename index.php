@@ -2,9 +2,13 @@
 <html lang="pt-br">
 
 <?php
-session_start();
-
 include_once __DIR__ . "/src/controller/auth.php";
+include_once __DIR__ . "/src/dao/connection.php";
+include_once __DIR__ . "/src/dao/userDAO.php";
+
+$userDAO = new UserDAO(Connection::getConnection());
+$session = new Session();
+$auth = new Auth($userDAO, $session);
 
 if (isset($_SESSION['message'])) {
     echo "<div class='message'>{$_SESSION['message']}</div>";
@@ -15,10 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $user = Auth::login($email, $password);
+    $user = $auth->login($email, $password);
 
     if ($user) {
-        session_start();
         $_SESSION['user'] = $user;
         header("Location: src/view/home.php");
         exit();

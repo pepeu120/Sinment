@@ -12,15 +12,14 @@ class Connection
         try {
             $conn = new PDO(
                 self::$dataSourceName . "sql:host=" . self::$servername . ";dbname=" .
-                self::$dbName,self::$username, self::$password
+                self::$dbName, self::$username, self::$password
             );
 
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo "Connected successfully";
             return $conn;
         } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-            return null;
+            error_log("Connection failed: " . $e->getMessage());
+            throw $e;
         }
     }
 

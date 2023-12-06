@@ -2,34 +2,40 @@
 require_once __DIR__ . "/../dao/connection.php";
 require_once __DIR__ . "/../model/user.php";
 require_once __DIR__ . "/../dao/userDAO.php";
+require_once __DIR__ . "/../model/session.php";
 
 class Auth
 {
-    public static function login($email, $password)
+    private $userDAO;
+    private $session;
+
+    public function __construct(UserDAO $userDAO, Session $session)
     {
-        $userDAO = new UserDAO();
-        $user = $userDAO->authenticate($email, $password);
+        $this->userDAO = $userDAO;
+        $this->session = $session;
+    }
+
+    public function login($email, $password)
+    {
+        $user = $this->userDAO->authenticate($email, $password);
 
         if ($user) {
-            session_start();
+            $this->session->start();
             return $user;
         } else {
-            return null;
+            throw new Exception("Authentication failed");
         }
     }
 
-    public static function logout()
+    public function logout()
     {
-        session_unset();
-        session_destroy();
+        $this->session->end();
         header("Location: /Sinment/index.php");
         exit();
     }
 
-    public static function isLoggedIn()
+    public function isLoggedIn()
     {
-        session_start();
-
-        return isset($_SESSION['user']);
+        return $this->session->isStarted();
     }
 }

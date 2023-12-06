@@ -2,13 +2,20 @@
 include_once __DIR__ . "/../controller/auth.php";
 include_once __DIR__ . "/../dao/PostDAO.php";
 
-if (!Auth::isLoggedIn()) {
+$userDAO = new UserDAO(Connection::getConnection());
+$session = new Session();
+$auth = new Auth($userDAO, $session);
+
+$postDAO = new PostDAO(Connection::getConnection());
+
+$session->start();
+
+if (!$auth->isLoggedIn()) {
     header("Location: /Sinment/index.php");
     exit();
 }
 
 $user = $_SESSION['user'];
-$postDAO = new PostDAO();
 $posts = $postDAO->getAllPosts();
 ?>
 
@@ -36,16 +43,12 @@ $posts = $postDAO->getAllPosts();
         <button type="submit" name="create_post">Create Post</button>
     </form>
 
-    <form action="../controller/userController.php" method="post">
-        <button type="submit" name="logout">Logout</button>
-    </form>
-
     <?php foreach ($posts as $post) : ?>
         <div class="post">
             <h2><?php echo $post->getCaption(); ?></h2>
             <img src="<?php echo $post->getImagePath(); ?>" alt="Post image">
             <p>Posted by <?php echo $user->getFirstname() . " " . $user->getLastname(); ?></p>
-            <p>Posted by <?php echo $post->getPostingDate(); ?></p>
+            <p>Posted on <?php echo $post->getPostingDate(); ?></p>
         </div>
     <?php endforeach; ?>
 </body>

@@ -1,130 +1,97 @@
 <?php
-require_once __DIR__ . "/../dao/connection.php";
 require_once __DIR__ . "/../model/user.php";
 
 class UserDAO
 {
+    private $conn;
 
-    public function insert($user)
+    public function __construct($conn)
     {
-        try {
-            $conn = Connection::getConnection();
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $stmt = $conn->prepare("INSERT INTO User (firstname, lastname, email, password)
-            VALUES (:firstname, :lastname, :email, :password)");
-
-            $firstname = $user->getFirstname();
-            $lastname = $user->getLastname();
-            $email = $user->getEmail();
-            $password = $user->getPassword();
-
-            $stmt->bindParam(':firstname', $firstname);
-            $stmt->bindParam(':lastname', $lastname);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $password);
-
-            $stmt->execute();
-
-            echo "Usúario " . $user->getFirstname() . " inserido com sucesso";
-            return true;
-        } catch (PDOException $ex) {
-            $ex->getMessage();
-            throw new RuntimeException("Erro ao inserir informação no banco de dados");
-        } finally {
-            Connection::closeConnection($conn);
-        }
+        $this->conn = $conn;
     }
 
-    public function update($user)
+    public function insert(User $user): bool
     {
-        try {
-            $conn = Connection::getConnection();
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $this->conn->prepare("INSERT INTO User (firstname, lastname, email, password)
+        VALUES (:firstname, :lastname, :email, :password)");
 
-            $stmt = $conn->prepare(
-                "UPDATE User
+        $firstname = $user->getFirstname();
+        $lastname = $user->getLastname();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+
+        $stmt->bindParam(':firstname', $firstname);
+        $stmt->bindParam(':lastname', $lastname);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $password);
+
+        Connection::closeConnection($this->conn);
+        
+        return $stmt->execute();
+    }
+
+    public function update($user): bool
+    {
+        $stmt = $this->conn->prepare(
+            "UPDATE User
                 SET (firstname = :firstname, lastname = :lastname, email = :email, password = :password)
                 WHERE id = :id)"
-            );
+        );
 
-            $firstname = $user->getFirstname();
-            $lastname = $user->getLastname();
-            $email = $user->getEmail();
-            $password = $user->getPassword();
-            $id = $user->getId();
+        $firstname = $user->getFirstname();
+        $lastname = $user->getLastname();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+        $id = $user->getId();
 
-            $stmt->bindParam(':firstname', $firstname);
-            $stmt->bindParam(':lastname', $lastname);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $password);
-            $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':firstname', $firstname);
+        $stmt->bindParam(':lastname', $lastname);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
 
-            $stmt->execute();
+        Connection::closeConnection($this->conn);
 
-            echo "Usúario " . $user->getFirstname() . " alterado com sucesso";
-        } catch (PDOException $ex) {
-            $ex->getMessage();
-            throw new RuntimeException("Erro ao inserir informação no banco de dados");
-        } finally {
-            Connection::closeConnection($conn);
-        }
+        return true;
     }
 
-    public function delete($user)
+    public function delete($user): bool
     {
+        $stmt = $this->conn->prepare("DELETE FROM CURSO WHERE id = ?");
+        $stmt->bindParam(1, $user->getId());
+        $stmt->execute();
 
-        $con = Connection::getConnection();
-        $stmt = null;
+        Connection::closeConnection($this->conn);
 
-        try {
-            $stmt = $con->prepare("DELETE FROM CURSO WHERE id = ?");
-
-            $stmt->bindParam(1, $user->getId());
-
-            $stmt->execute();
-
-            echo "Curso " . $user->getNome() . " excluído com sucesso";
-        } catch (PDOException $ex) {
-            $ex->getMessage();
-            throw new RuntimeException("Erro ao inserir informação no banco de dados");
-        } finally {
-            Connection::closeConnection($con, $stmt);
-        }
+        return true;
     }
 
-    public function select()
+    public function select(): array
     {
         $users = array();
 
-        try {
-            $conn = Connection::getConnection();
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare("SELECT * FROM User");
-            $stmt->execute();
+        $stmt = $this->conn->prepare("SELECT * FROM User");
+        $stmt->execute();
 
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $user = new User();
-                $user->setId($row['id']);
-                $user->setFirstname($row['firstname']);
-                $user->setLastname($row['lastname']);
-                $user->setEmail($row['email']);
-                $user->setPassword($row['password']);
-                $users[] = $user;
-            }
-        } catch (PDOException $ex) {
-            $ex->getMessage();
-        } finally {
-            Connection::closeConnection($conn);
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user = new User();
+            $user->setId($row['id']);
+            $user->setFirstname($row['firstname']);
+            $user->setLastname($row['lastname']);
+            $user->setEmail($row['email']);
+            $user->setPassword($row['password']);
+            $users[] = $user;
         }
+
+        Connection::closeConnection($this->conn);
 
         return $users;
     }
 
-    public function authenticate($email, $password)
+    public function authenticate($email, $password): ?User
     {
-        $conn = Connection::getConnection();
-        $stmt = $conn->prepare("SELECT * FROM User WHERE email = ? AND password = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM User WHERE email = ? AND password = ?");
         $stmt->bindParam(1, $email);
         $stmt->bindParam(2, $password);
         $stmt->execute();
@@ -137,13 +104,9 @@ class UserDAO
             $user->setEmail($row['email']);
             $user->setPassword($row['password']);
 
-            Connection::closeConnection($conn);
+            Connection::closeConnection($this->conn);
 
             return $user;
         }
-
-        Connection::closeConnection($conn);
-        return null;
     }
-
 }

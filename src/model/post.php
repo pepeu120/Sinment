@@ -7,52 +7,52 @@ class Post
     private $imagePath;
     private $postingDate;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId(int $id): void
     {
-        $this->id= $id;
+        $this->id = $id;
     }
 
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->userId;
     }
 
-    public function setUserId($userId)
+    public function setUserId(int $userId): void
     {
         $this->userId = $userId;
     }
 
-    public function getCaption()
+    public function getCaption(): string
     {
         return $this->caption;
     }
 
-    public function setCaption($caption)
+    public function setCaption(string $caption): void
     {
         $this->caption = $caption;
     }
 
-    public function getImagePath()
+    public function getImagePath(): string
     {
         return $this->imagePath;
     }
 
-    public function setImagePath($imagePath)
+    public function setImagePath(string $imagePath): void
     {
         $this->imagePath = $imagePath;
     }
 
-    public function getPostingDate()
+    public function getPostingDate(): string
     {
         return $this->postingDate;
     }
 
-    public function setPostingDate($postingDate)
+    public function setPostingDate(string $postingDate): void
     {
         $this->postingDate = $postingDate;
     }
