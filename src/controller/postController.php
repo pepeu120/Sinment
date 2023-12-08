@@ -1,33 +1,25 @@
 <?php
 require_once __DIR__ . "/../dao/postDAO.php";
 require_once __DIR__ . "/../model/post.php";
+require_once __DIR__ . "/../dao/connection.php";
 require_once __DIR__ . "/../model/fileUpload.php";
-require_once __DIR__ . "/../model/session.php";
 require_once __DIR__ . "/../model/inputSanitizer.php";
-require_once __DIR__ . "/../model/auth.php";
-require_once __DIR__ . "/../view/profile.php";
 require_once __DIR__ . "/../model/postService.php";
 
-$userDAO = new UserDAO(Connection::getConnection());
-$session = new Session();
-$auth = new Auth($userDAO, $session);
+class PostController
+{
+    private $fileUpload;
 
-$session->start();
+    public function __construct()
+    {
+        $this->fileUpload = new FileUpload("../../public/images/uploads/");
+    }
 
-if (!$auth->isLoggedIn()) {
-    header("Location: /Sinment/index.php");
-    exit();
-}
+    public function submitPost($user, $postCaption, $postImage)
+    {
+        $postCaption = InputSanitizer::sanitize($postCaption);
 
-$user = $userDAO->getUserById($_SESSION['userId']);
-
-$fileUpload = new FileUpload("../../public/images/uploads/");
-
-if ($_SERVER["REQUEST_METHOD"]) {
-    if ("POST" && isset($_POST["submitPost"])) {
-        $postCaption = InputSanitizer::sanitize($_POST["postCaption"]);
-
-        $targetFile = $fileUpload->upload($_FILES["postImage"]);
+        $targetFile = $this->fileUpload->upload($postImage);
 
         $post = new Post();
         $post->setUserId($user->getId());
@@ -43,8 +35,10 @@ if ($_SERVER["REQUEST_METHOD"]) {
         } else {
             $_SESSION['message'] = "Falha ao criar post";
         }
-    } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
-        $postId = $_POST["postId"];
+    }
+
+    public function deletePost($postId)
+    {
         $postDAO = new PostDAO(Connection::getConnection());
         $postService = new PostService($postDAO);
 

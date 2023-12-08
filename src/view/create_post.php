@@ -37,7 +37,7 @@ $user = $userDAO->getUserById($_SESSION['userId']);
                 <li><a href="create_post.php">Novo Post</a></li>
                 <li><a href="profile.php">Perfil</a></li>
                 <li>
-                    <form action="../controller/userController.php" method="post">
+                    <form action="../controller/router.php" method="post">
                         <button type="submit" name="logout">Sair</button>
                     </form>
                 </li>
@@ -48,7 +48,7 @@ $user = $userDAO->getUserById($_SESSION['userId']);
     <h1>Criar Post</h1>
 
     <div class="form-input">
-        <form action="../controller/postController.php" method="post" enctype="multipart/form-data">
+        <form action="../controller/router.php" method="post" enctype="multipart/form-data">
             <label for="postCaption">Legenda:</label>
             <textarea name="postCaption" id="postCaption" rows="4" cols="50" required aria-label="Legenda"></textarea>
 

@@ -42,7 +42,7 @@ $posts = $postDAO->getAllPostsByUserId($user->getId());
                 <li><a href="create_post.php">New Post</a></li>
                 <li><a href="profile.php">Profile</a></li>
                 <li>
-                    <form action="../controller/userController.php" method="post">
+                    <form action="../controller/router.php" method="post">
                         <button class="logout-button" type="submit" name="logout">Exit</button>
                     </form>
                 </li>
@@ -63,7 +63,7 @@ $posts = $postDAO->getAllPostsByUserId($user->getId());
             <img src="<?php echo $post->getImagePath(); ?>" alt="Post image">
             <p>Posted by <?php echo $postingUser->getFirstname() . " " . $postingUser->getLastname(); ?></p>
             <p>Posted on <?php echo $post->getPostingDate(); ?></p>
-            <form action="../controller/postController.php" method="post">
+            <form action="../controller/router.php" method="post">
                 <input type="hidden" name="postId" value="<?php echo $post->getId(); ?>">
                 <button class="delete-button" type="submit" name="delete">delete</button>
             </form>

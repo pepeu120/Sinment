@@ -52,7 +52,7 @@ $session->start();
 
             <div class="form-container">
                 <div class="box-form">
-                    <form action="/Sinment/src/controller/userController.php" method="post">
+                    <form action="/Sinment/src/controller/router.php" method="post">
                         <div class="form-input-container">
                             <input type="email" name="email" class="form-input" placeholder="Email" required>
                             <input type="password" name="password" class="form-input" placeholder="Senha" required>
@@ -72,7 +72,7 @@ $session->start();
             <div class="modal">
                 <button class="close-modal" id="close-modal">X</button>
                 <h1>Cadastre-se</h1>
-                <form action="/Sinment/src/controller/userController.php" method="post">
+                <form action="/Sinment/src/controller/router.php" method="post">
                     <div class="form-input-container">
                         <input type="text" name="firstname" class="form-input" placeholder="Nome" required>
 

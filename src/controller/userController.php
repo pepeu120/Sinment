@@ -1,22 +1,45 @@
 <?php
 require_once __DIR__ . "/../dao/userDAO.php";
 require_once __DIR__ . "/../model/user.php";
+require_once __DIR__ . "/../dao/connection.php";
+require_once __DIR__ . "/../model/session.php";
 require_once __DIR__ . "/../model/inputSanitizer.php";
 require_once __DIR__ . "/../model/auth.php";
 
-$userDAO = new UserDAO(Connection::getConnection());
-$session = new Session();
-$auth = new Auth($userDAO, $session);
-$sanitizer = new InputSanitizer();
+class UserController {
+    private $userDAO;
+    private $session;
+    private $auth;
+    private $sanitizer;
 
-$session->start();
+    public function __construct()
+    {
+        $this->userDAO = new UserDAO(Connection::getConnection());
+        $this->session = new Session();
+        $this->auth = new Auth($this->userDAO, $this->session);
+        $this->sanitizer = new InputSanitizer();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["login"])) {
-        $email = $sanitizer->sanitize($_POST["email"]);
-        $password = $_POST["password"];
+        $this->session->start();
+    }
 
-        $user = $auth->login($email, $password);
+    public function handleRequest() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($_POST["login"])) {
+                $this->login($_POST["email"], $_POST["password"]);
+            } elseif (isset($_POST["signup"])) {
+                $this->signup($_POST["firstname"], $_POST["lastname"], $_POST["email"], $_POST["password"]);
+            } elseif (isset($_POST["logout"])) {
+                $this->logout();
+            } elseif (isset($_POST["update"])) {
+                $this->update($_POST["old_password"], $_POST["new_password"], $_POST["firstname"], $_POST["lastname"], $_POST["email"]);
+            }
+        }
+    }
+
+    public function login($email, $password) {
+        $email = $this->sanitizer->sanitize($email);
+
+        $user = $this->auth->login($email, $password);
 
         if ($user) {
             $_SESSION['userId'] = $user->getId();
@@ -26,13 +49,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['message'] = "Usuário ou senhas invalidos. Verifique suas credenciais.";
             header("Location: /Sinment/index.php");
         }
-    } elseif (isset($_POST["signup"])) {
-        $firstname = $sanitizer->sanitize($_POST["firstname"]);
-        $lastname = $sanitizer->sanitize($_POST["lastname"]);
-        $email = $sanitizer->sanitize($_POST["email"]);
-        $password = $_POST["password"];
+    }
 
-        if ($userDAO->emailExists($email)) {
+    public function signup($firstname, $lastname, $email, $password) {
+        $firstname = $this->sanitizer->sanitize($firstname);
+        $lastname = $this->sanitizer->sanitize($lastname);
+        $email = $this->sanitizer->sanitize($email);
+
+        if ($this->userDAO->emailExists($email)) {
             $_SESSION['message'] = "Email já cadastrado.";
             header("Location: /Sinment/index.php");
             exit();
@@ -43,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user->setEmail($email);
             $user->setPassword(password_hash($password, PASSWORD_DEFAULT));
 
-            if ($userDAO->insert($user)) {
+            if ($this->userDAO->insert($user)) {
                 $_SESSION['message'] = "Usuário inserido com sucesso!";
             } else {
                 $_SESSION['message'] = "Erro ao inserir usuário.";
@@ -51,23 +75,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         header("Location: /Sinment/index.php");
         exit();
-    } elseif (isset($_POST["logout"])) {
-        $auth->logout();
-    } elseif (isset($_POST["update"])) {
-        $oldPassword = $_POST["old_password"];
-        $newPassword = $_POST["new_password"];
+    }
 
-        $userDAO = new UserDAO(Connection::getConnection());
-        $user = $userDAO->getUserById($_SESSION['userId']);
+    public function logout() {
+        $this->auth->logout();
+    }
+
+    public function update($oldPassword, $newPassword, $firstname, $lastname, $email) {
+        $user = $this->userDAO->getUserById($_SESSION['userId']);
 
         if (password_verify($oldPassword, $user->getPassword())) {
-            $user->setFirstname($_POST["firstname"]);
-            $user->setLastname($_POST["lastname"]);
-            $user->setEmail($_POST["email"]);
+            $user->setFirstname($firstname);
+            $user->setLastname($lastname);
+            $user->setEmail($email);
             $user->setPassword(password_hash($newPassword, PASSWORD_DEFAULT));
 
-            $user->setPassword(password_hash($newPassword, PASSWORD_DEFAULT));
-            $userDAO->update($user);
+            $this->userDAO->update($user);
             $_SESSION['message'] = "Perfil atualizado com sucesso!";
         } else {
             $_SESSION['message'] = "Senha incorreta";

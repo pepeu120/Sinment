@@ -1,13 +1,12 @@
 .message {
-    background-color: #f44336; /* Red background */
-    color: #ffffff; /* White text */
+    background-color: #f44336;
+    color: #ffffff;
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
-    text-align: center; /* Centered text */
+    text-align: center;
 }
 
-/* For screens smaller than 600px */
 @media (max-width: 600px) {
     .message {
         font-size: 14px;
@@ -15,7 +14,6 @@
     }
 }
 
-/* For screens larger than 600px but smaller than 900px */
 @media (min-width: 601px) and (max-width: 900px) {
     .message {
         font-size: 18px;
@@ -23,7 +21,6 @@
     }
 }
 
-/* For screens larger than 900px */
 @media (min-width: 901px) {
     .message {
         font-size: 20px;

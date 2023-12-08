@@ -42,7 +42,7 @@ $posts = $postDAO->getAllPosts();
                 <li><a href="create_post.php">Novo Post</a></li>
                 <li><a href="profile.php">Perfil</a></li>
                 <li>
-                    <form action="../controller/userController.php" method="post">
+                    <form action="../controller/router.php" method="post">
                         <button type="submit" name="logout">Sair</button>
                     </form>
                 </li>

@@ -40,7 +40,7 @@ $user = $userDAO->getUserById($_SESSION['userId']);
                 <li><a href="create_post.php">New Post</a></li>
                 <li><a href="profile.php">Profile</a></li>
                 <li>
-                    <form action="../controller/userController.php" method="post">
+                    <form action="../controller/router.php" method="post">
                         <button class="logout-button" type="submit" name="logout">Exit</button>
                     </form>
                 </li>
@@ -51,15 +51,12 @@ $user = $userDAO->getUserById($_SESSION['userId']);
     <h1>Editar Perfil</h1>
 
     <div class="form-input">
-        <form action="/Sinment/src/controller/userController.php" method="post">
-            <input type="text" name="firstname" class="form-input" placeholder="Nome"
-                value="<?php echo $user->getFirstname(); ?>" required>
+        <form action="/Sinment/src/controller/router.php" method="post">
+            <input type="text" name="firstname" class="form-input" placeholder="Nome" value="<?php echo $user->getFirstname(); ?>" required>
 
-            <input type="text" name="lastname" class="form-input" placeholder="Sobrenome"
-                value="<?php echo $user->getLastname(); ?>" required>
+            <input type="text" name="lastname" class="form-input" placeholder="Sobrenome" value="<?php echo $user->getLastname(); ?>" required>
 
-            <input type="email" name="email" class="form-input" placeholder="Email"
-                value="<?php echo $user->getEmail(); ?>" required>
+            <input type="email" name="email" class="form-input" placeholder="Email" value="<?php echo $user->getEmail(); ?>" required>
 
             <input type="password" name="old_password" class="form-input" placeholder="Old Password" required>
 
