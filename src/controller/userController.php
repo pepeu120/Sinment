@@ -22,20 +22,6 @@ class UserController {
         $this->session->start();
     }
 
-    public function handleRequest() {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if (isset($_POST["login"])) {
-                $this->login($_POST["email"], $_POST["password"]);
-            } elseif (isset($_POST["signup"])) {
-                $this->signup($_POST["firstname"], $_POST["lastname"], $_POST["email"], $_POST["password"]);
-            } elseif (isset($_POST["logout"])) {
-                $this->logout();
-            } elseif (isset($_POST["update"])) {
-                $this->update($_POST["old_password"], $_POST["new_password"], $_POST["firstname"], $_POST["lastname"], $_POST["email"]);
-            }
-        }
-    }
-
     public function login($email, $password) {
         $email = $this->sanitizer->sanitize($email);
 
