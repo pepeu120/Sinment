@@ -17,6 +17,10 @@ class Session
 
     public function isStarted()
     {
-        return session_status() == PHP_SESSION_ACTIVE;
+        if (session_status() == PHP_SESSION_ACTIVE){
+            return false;
+        } else {
+            return true;
+        }
     }
 }

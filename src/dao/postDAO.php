@@ -23,40 +23,7 @@ class PostDAO
         $stmt->bindParam(':caption', $caption);
         $stmt->bindParam(':imagePath', $imagePath);
 
-        Connection::closeConnection($this->conn);
-
         return $stmt->execute();
-    }
-
-    public function getPostById(int $postId): ?array
-    {
-        $stmt = $this->conn->prepare("SELECT * FROM Post WHERE id = :id");
-        $stmt->bindParam(':id', $postId);
-        $stmt->execute();
-
-        $post = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        Connection::closeConnection($this->conn);
-
-        return $post;
-    }
-
-    public function update(Post $post): bool
-    {
-        $stmt = $this->conn->prepare("UPDATE Post SET caption = :caption, imagePath = :imagePath WHERE id = :id");
-
-        $postId = $post->getId();
-        $caption = $post->getCaption();
-        $imagePath = $post->getimagePath();
-
-        $stmt->bindParam(':id', $postId);
-        $stmt->bindParam(':caption', $caption);
-        $stmt->bindParam(':imagePath', $imagePath);
-        $stmt->execute();
-
-        Connection::closeConnection($this->conn);
-
-        return true;
     }
 
     public function delete(int $postId): bool
@@ -65,9 +32,28 @@ class PostDAO
         $stmt->bindParam(':id', $postId);
         $stmt->execute();
 
-        Connection::closeConnection($this->conn);
 
         return true;
+    }
+
+    public function getPostById(int $postId): ?Post
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM Post WHERE id = :id");
+        $stmt->bindParam(':id', $postId);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            $post = new Post();
+            $post->setId($row['id']);
+            $post->setUserId($row['user_id']);
+            $post->setCaption($row['caption']);
+            $post->setImagePath($row['image_path']);
+            $post->setPostingDate($row['posting_date']);
+            return $post;
+        }
+
+        return null;
     }
 
     public function getAllPosts(): array
@@ -85,7 +71,26 @@ class PostDAO
             $post->setPostingDate($row['posting_date']);
             $posts[] = $post;
         }
-        Connection::closeConnection($this->conn);
+
+        return $posts;
+    }
+
+    public function getAllPostsByUserId(int $userId): array
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM Post WHERE user_id = :user_id ORDER BY id DESC");
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+
+        $posts = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $post = new Post();
+            $post->setId($row['id']);
+            $post->setUserId($row['user_id']);
+            $post->setCaption($row['caption']);
+            $post->setImagePath($row['image_path']);
+            $post->setPostingDate($row['posting_date']);
+            $posts[] = $post;
+        }
 
         return $posts;
     }

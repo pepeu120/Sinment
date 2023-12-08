@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . "/../model/session.php";
+$session = new Session();
+$session->start();
+
 class Connection
 {
     private static $servername = "localhost";
@@ -18,19 +22,9 @@ class Connection
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $conn;
         } catch (PDOException $e) {
-            error_log("Connection failed: " . $e->getMessage());
-            throw $e;
-        }
-    }
-
-    public static function closeConnection($conn)
-    {
-        try {
-            $conn = null;
-            return $conn;
-        } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-            return null;
+            $_SESSION['message'] = "Erro ao conectar com o banco de dados. " . $e->getMessage();
+            header("Location: /Sinment/index.php");
+            exit();
         }
     }
 }
